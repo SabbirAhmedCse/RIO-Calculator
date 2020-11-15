@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        h2{
+            color: #4472C4;
+        }
+
+        input[type=text], input[type=number]
+         {
+            width: 100%;
+            font-size: 20px;
+            font-family: ;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+         
+        textarea {
+            width: 100%;
+            font-size: 20px;
+            font-family: ;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+
+        label {
+            padding: 12px 12px 12px 0;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        input[type=download] {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            padding: 10px 0px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+
+        input[type=download]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .col-25 {
+            float: left;
+            width: 50%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 50%;
+            margin-top: 6px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 600px) {
+
+            .col-25,
+            .col-75,
+            input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+    </style>
+
+    <title>RIO Calculator</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+
+
+    <div class="container">
+        <form action="/action_page.php">
+            <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)" style="display: none;"></p>
+            <p><label for="file" style="cursor: pointer;">Upload Logo</label></p>
+            <div class="row">
+                <div class="col-25">
+                    <img id="output" width="200" height="100" />
+                </div>
+                <div class="col-75">
+                    <textarea id="subject" name="subject" placeholder="Real Estate:
+Name:
+Email:
+Website:
+Mobile:" style="height:140px"></textarea>
+                </div>
+            </div>
+
+            <h2>Property Details</h2>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Property Reference</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="PropertyReference" name="PropertyReference" placeholder="e.g Studio, Shamal Residences 2, JVC ">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="PropertySize">Property Size Sq.Ft</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="PropertySize" name="PropertySize" placeholder="500">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="PropertyValue">Property Value</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="PropertyValue" name="PropertyValue" placeholder="500000">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="RentValue">Rent Value</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="RentValue" name="RentValue" placeholder="500000">
+                </div>
+            </div>
+
+            <h2>Expenses</h2>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="MaintenanceContract">Maintenance Contract Value</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="MaintenanceContract" name="MaintenanceContract" placeholder="500000">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="PropertyManagement">Property Management Contract Value</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="PropertyManagement" name="PropertyManagement" placeholder="500000">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="ServiceCharge">Service Charge Per Sq.Ft</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="ServiceCharge" name="ServiceCharge" placeholder="500000">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="YearlyServiceCharge">Yearly Service Charge Value</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="YearlyServiceCharge" name="YearlyServiceCharge" placeholder="500000" onchange="">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="NetROIAmount">Net ROI Amount</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="NetROIAmount" name="NetROIAmount" placeholder="500000" onchange="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="NetROI">Net ROI %</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" id="NetROI" name="NetROI" placeholder="3%" onchange="">
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+                <textarea id="Notes" name="Notes" value="Notes:" placeholder="Notes:" style="height:80px"></textarea>
+            </div>
+
+            <div class="row">
+                <p>
+                Note: This ROI Calculator is an illustration for educational and informational purposes only, and should not be concidered as rental guarantee.
+                </p>
+            </div>
+
+            <div class="row">
+                <input type="download" value="download">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+    </script>
+</body></html>
