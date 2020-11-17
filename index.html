@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,13 @@
         * {
             box-sizing: border-box;
         }
-        
-        h2{
+
+        h2 {
             color: #4472C4;
         }
 
-        input[type=text], input[type=number]
-         {
+        input[type=text],
+        input[type=number] {
             width: 100%;
             font-size: 20px;
             font-family: ;
@@ -24,8 +25,8 @@
             border-radius: 4px;
             resize: vertical;
         }
-        
-         
+
+
         textarea {
             width: 100%;
             font-size: 20px;
@@ -44,20 +45,21 @@
             display: inline-block;
         }
 
-        input[type=download] {
+        button[type=button] {
             background-color: #4CAF50;
             color: white;
             text-align: center;
             font-size: 20px;
-            padding: 10px 0px;
+            padding: 10px 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             float: right;
         }
 
-        input[type=download]:hover {
+        button[type=button]:hover {
             background-color: #45a049;
+            
         }
 
         .container {
@@ -70,13 +72,13 @@
 
         .col-25 {
             float: left;
-            width: 50%;
+            width: 45%;
             margin-top: 6px;
         }
 
         .col-75 {
             float: left;
-            width: 50%;
+            width: 55%;
             margin-top: 6px;
         }
 
@@ -100,143 +102,195 @@
     </style>
 
     <title>RIO Calculator</title>
-    <link rel="stylesheet" href="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+        
+        function calculater(){
+           
+            var size = document.getElementById('propertySize').value;
+            var charge = document.getElementById('serviceCharge').value;
+            var totalCharge = (size * charge).toFixed(2);
+           if(!isNaN(totalCharge)){
+               document.getElementById('yearlyServiceCharge').value =  totalCharge;
+           }
+            var rentValue = document.getElementById('rentValue').value;
+            var maintenanceContract = document.getElementById('maintenanceContract').value;
+            var propertyManagement = document.getElementById('propertyManagement').value;
+            var yearlyServiceCharge = document.getElementById('yearlyServiceCharge').value;
+            
+            var netROIAmount = (rentValue - maintenanceContract - propertyManagement - yearlyServiceCharge).toFixed(2);
+            
+            if(!isNaN(netROIAmount)){
+                document.getElementById('netROIAmount').value = netROIAmount;
+            }
+            
+            
+            var propertyValue = document.getElementById('propertyValue').value;
+            var netROIAmount = document.getElementById('netROIAmount').value;
+            var netROI = ((netROIAmount/propertyValue)*100).toFixed(2);
+            
+            if(!isNaN(netROI)){
+                document.getElementById('netROI').value = netROI +'%';
+            }
+            
+            
+        };
+        
+        
+        window.onload = function(){
+            document.getElementById("download").addEventListener("click",()=>{
+                const print = this.document.getElementById("calculator");
+                console.log(calculator);
+                console.log(window);
+                var opt = {
+                    margin:.5,
+                    filename: "rio calculator.pdf",
+                    image:{type: 'png', quality: .9},
+                    html2canvas: {scale: 3},
+                    jsPDF: {unit: "in", format: 'letter'}
+                };
+                html2pdf().from(calculator).set(opt).save();
+            })
+        };
+
+    </script>
+    
 </head>
 
 <body>
 
 
     <div class="container">
-        <form action="/action_page.php">
+        <form action="/action_page.php" id="printJS-form">
             <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)" style="display: none;"></p>
             <p><label for="file" style="cursor: pointer;">Upload Logo</label></p>
-            <div class="row">
-                <div class="col-25">
-                    <img id="output" width="200" height="100" />
+            <div id="calculator">
+                <div class="row">
+                    <div class="col-25">
+                        <img id="output" width="200" height="100" />
+                    </div>
+                    <div class="col-75">
+                        <textarea id="subject" name="subject" placeholder="enter contact details" style="height:140px"></textarea>
+                    </div>
                 </div>
-                <div class="col-75">
-                    <textarea id="subject" name="subject" placeholder="Real Estate:
-Name:
-Email:
-Website:
-Mobile:" style="height:140px"></textarea>
+
+                <h2>Property Details</h2>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Property Reference</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="propertyReference"  placeholder="e.g.: Studio, Shamal Residences 2, JVC">
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Property Size Sq.Ft</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="propertySize"  placeholder="enter property size in square feet as per title deed." onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Property Value</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="propertyValue" placeholder="enter property purchase price." onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Rent Value</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="rentValue" placeholder="enter annual rent value." onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <h2>Expenses</h2>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Maintenance Contract Value</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="maintenanceContract" placeholder="enter yearly cost if applicable" onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Property Management Contract Value</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="propertyManagement"  placeholder="enter yearly cost if applicable" onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Service Charge Per Sq.Ft</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="serviceCharge" placeholder="enter the rate per square feet." onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Yearly Service Charge Value</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="yearlyServiceCharge" placeholder="0.00" onkeyup="calculater()"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label >Net ROI Amount</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="netROIAmount" placeholder="0.00" onkeyup="calculater()"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="NetROI">Net ROI %</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="netROI" name="NetROI" value="%" placeholder="" onkeyup="calculater()" />
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <textarea id="notes" name="Notes" value="Notes:" placeholder="Notes:" style="height:50px"></textarea>
+                </div>
+
+                <div class="row">
+                    <p>
+                        Note: This ROI Calculator is an illustration for educational and informational purposes only, and should not be concidered as rental guarantee.
+                    </p>
+                </div>
+
             </div>
-
-            <h2>Property Details</h2>
-
             <div class="row">
-                <div class="col-25">
-                    <label for="fname">Property Reference</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="PropertyReference" name="PropertyReference" placeholder="e.g Studio, Shamal Residences 2, JVC ">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="PropertySize">Property Size Sq.Ft</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="PropertySize" name="PropertySize" placeholder="500">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="PropertyValue">Property Value</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="PropertyValue" name="PropertyValue" placeholder="500000">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="RentValue">Rent Value</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="RentValue" name="RentValue" placeholder="500000">
-                </div>
-            </div>
-
-            <h2>Expenses</h2>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="MaintenanceContract">Maintenance Contract Value</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="MaintenanceContract" name="MaintenanceContract" placeholder="500000">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="PropertyManagement">Property Management Contract Value</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="PropertyManagement" name="PropertyManagement" placeholder="500000">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="ServiceCharge">Service Charge Per Sq.Ft</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="ServiceCharge" name="ServiceCharge" placeholder="500000">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="YearlyServiceCharge">Yearly Service Charge Value</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="YearlyServiceCharge" name="YearlyServiceCharge" placeholder="500000" onchange="">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="NetROIAmount">Net ROI Amount</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="NetROIAmount" name="NetROIAmount" placeholder="500000" onchange="">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="NetROI">Net ROI %</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="NetROI" name="NetROI" placeholder="3%" onchange="">
-                </div>
-            </div>
-
-            <br>
-            <div class="row">
-                <textarea id="Notes" name="Notes" value="Notes:" placeholder="Notes:" style="height:80px"></textarea>
-            </div>
-
-            <div class="row">
-                <p>
-                Note: This ROI Calculator is an illustration for educational and informational purposes only, and should not be concidered as rental guarantee.
-                </p>
-            </div>
-
-            <div class="row">
-                <input type="download" value="download">
+                <button id="download" type="button" >Download</button>
             </div>
         </form>
     </div>
 
-    <script>
-        var loadFile = function(event) {
-            var image = document.getElementById('output');
-            image.src = URL.createObjectURL(event.target.files[0]);
-        };
-    </script>
-</body></html>
+    
+</body>
+
+</html>
