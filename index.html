@@ -139,78 +139,15 @@
     </style>
 
     <title>RIO Calculator</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-
-    <script>
-        var loadFile = function(event) {
-            var image = document.getElementById('output');
-            image.src = URL.createObjectURL(event.target.files[0]);
-        };
-
-        function calculater() {
-            
-            var formatter = new Intl.NumberFormat('en-us');
-
-            var size = document.getElementById('propertySize').value;
-            var charge = document.getElementById('serviceCharge').value;
-            var totalCharge = (parseInt(size.replaceAll(",","")) * parseInt(charge.replaceAll(",","")));
-            if (!isNaN(totalCharge)) {
-                document.getElementById('yearlyServiceCharge').value = formatter.format(totalCharge);
-            }
-            var rentValue = document.getElementById('rentValue').value;
-            var maintenanceContract = document.getElementById('maintenanceContract').value;
-            var propertyManagement = document.getElementById('propertyManagement').value;
-            var yearlyServiceCharge = document.getElementById('yearlyServiceCharge').value;
-
-            var netROIAmount = (parseInt(document.getElementById('rentValue').value.replaceAll(",","")) - parseInt(maintenanceContract.replaceAll(",","")) - parseInt(propertyManagement.replaceAll(",","")) - parseInt(yearlyServiceCharge.replaceAll(",","")));
-
-            if (!isNaN(netROIAmount)) {
-                document.getElementById('netROIAmount').value = formatter.format(netROIAmount);
-            }
+    
 
 
-            var propertyValue = document.getElementById('propertyValue').value;
-            var netROIAmount = document.getElementById('netROIAmount').value;
-            var netROI = ((parseInt(netROIAmount.replaceAll(",","")) / parseInt(propertyValue.replaceAll(",",""))) * 100);
-
-            if (!isNaN(netROI)) {
-                document.getElementById('netROI').value = formatter.format(netROI) + '%';
-            }
-
-
-        };
-
-
-        window.onload = function() {
-            document.getElementById("download").addEventListener("click", () => {
-                const print = this.document.getElementById("calculator");
-                console.log(calculator);
-                console.log(window);
-                var opt = {
-                    margin: .5,
-                    filename: "rio calculator.pdf",
-                    image: {
-                        type: 'png',
-                        quality: .9
-                    },
-                    html2canvas: {
-                        scale: 3
-                    },
-                    jsPDF: {
-                        unit: "in",
-                        format: 'A4'
-                    }
-                };
-                html2pdf().from(calculator).set(opt).save();
-            })
-        };
-    </script>
 
 </head>
 
 <body>
-
-
     <div class="container">
         <form action="/action_page.php" id="printJS-form">
             <input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)" style="display: none;">
@@ -245,7 +182,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Property Size Sq.Ft</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="propertySize" placeholder="enter property size in square feet as per title deed." onkeyup="calculater()" />
+                        <input type="text" id="propertySize" class="number" placeholder="enter property size in square feet as per title deed." onkeyup="calculater()"/>
                     </div>
                 </div>
 
@@ -254,7 +191,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Property Value</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="propertyValue" placeholder="enter property purchase price." onkeyup="calculater()" />
+                        <input type="text" id="propertyValue" class="number" placeholder="enter property purchase price." onkeyup="calculater()" />
                     </div>
                 </div>
 
@@ -263,7 +200,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Rent Value</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="rentValue" placeholder="enter annual rent value." onkeyup="calculater()" />
+                        <input type="text" id="rentValue" class="number" placeholder="enter annual rent value." onkeyup="calculater()" />
                     </div>
                 </div>
 
@@ -274,7 +211,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Maintenance Contract Value</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="maintenanceContract" placeholder="enter yearly cost if applicable" onkeyup="calculater()" />
+                        <input type="text" id="maintenanceContract" class="number" placeholder="enter yearly cost if applicable" onkeyup="calculater()" />
                     </div>
                 </div>
 
@@ -283,7 +220,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Property Management Contract Value</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="propertyManagement" placeholder="enter yearly cost if applicable" onkeyup="calculater()" />
+                        <input type="text" id="propertyManagement" class="number" placeholder="enter yearly cost if applicable" onkeyup="calculater()" />
                     </div>
                 </div>
 
@@ -292,7 +229,7 @@ Mobile:" style="height:107px"></textarea>
                         <label>Service Charge Per Sq.Ft</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="serviceCharge" placeholder="enter the rate per square feet." onkeyup="calculater()" />
+                        <input type="text" id="serviceCharge" class="number" placeholder="enter the rate per square feet." onkeyup="calculater()" />
                     </div>
                 </div>
 
@@ -339,6 +276,124 @@ Mobile:" style="height:107px"></textarea>
             </div>
         </form>
     </div>
+ <script>
+        var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+        
+        
+
+        $('input.number').keyup(function(event) {
+
+  // skip for arrow keys
+  if(event.which >= 37 && event.which <= 40) return;
+
+  // format number
+  $(this).val(function(index, value) {
+    return value
+    .replace(/\D/g, "")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+});
+        
+             function calculater() {
+            
+            var formatter = new Intl.NumberFormat('en-us');
+            
+            var propertySize = document.getElementById('propertySize').value;
+             
+            var serviceCharge = document.getElementById('serviceCharge').value;
+            
+            var totalCharge = (parseInt(propertySize.replaceAll(",","")) * parseInt(serviceCharge.replaceAll(",","")));
+            if (!isNaN(totalCharge)) {
+                document.getElementById('yearlyServiceCharge').value = formatter.format(totalCharge);
+            }
+            
+            var rentValue = document.getElementById('rentValue').value;
+            var maintenanceContract = document.getElementById('maintenanceContract').value;
+            var propertyManagement = document.getElementById('propertyManagement').value;
+            var yearlyServiceCharge = document.getElementById('yearlyServiceCharge').value;
+                 
+            rentValue = parseInt(document.getElementById('rentValue').value.replaceAll(",",""));
+            maintenanceContract = parseInt(document.getElementById('maintenanceContract').value.replaceAll(",",""));
+            propertyManagement = parseInt(document.getElementById('propertyManagement').value.replaceAll(",",""));
+            yearlyServiceCharge = parseInt(document.getElementById('yearlyServiceCharge').value.replaceAll(",",""));
 
 
-</body></html>
+
+                 if (!isNaN(rentValue && yearlyServiceCharge)) {
+
+                     if (isNaN(maintenanceContract || propertyManagement)) {
+                             if(isNaN(propertyManagement && maintenanceContract)){
+                                var netROIAmount = rentValue - yearlyServiceCharge;
+                         document.getElementById('netROIAmount').value = formatter.format(netROIAmount);
+                                 document.getElementById('maintenanceContract').value = 0;
+                                 document.getElementById('propertyManagement').value = 0;
+                                }
+                             else{
+                                 if(isNaN(propertyManagement)){
+                                var netROIAmount = rentValue - maintenanceContract - yearlyServiceCharge;
+                         document.getElementById('netROIAmount').value = formatter.format(netROIAmount);
+                         document.getElementById('propertyManagement').value = 0;
+                                }
+                             else{
+                                 var netROIAmount = rentValue - propertyManagement - yearlyServiceCharge;
+                         document.getElementById('netROIAmount').value = formatter.format(netROIAmount);
+                         document.getElementById('maintenanceContract').value = 0;
+                             }
+                             }
+                     }
+                     else {
+                         var netROIAmount = rentValue - maintenanceContract - propertyManagement - yearlyServiceCharge;
+                         document.getElementById('netROIAmount').value = formatter.format(netROIAmount);
+
+                             
+                     }
+
+            }
+            
+            
+            
+
+            var propertyValue = document.getElementById('propertyValue').value;
+            var netROIAmount = document.getElementById('netROIAmount').value;
+            var netROI = ((parseInt(netROIAmount.replaceAll(",","")) / parseInt(propertyValue.replaceAll(",",""))) * 100);
+
+            if (!isNaN(netROI)) {
+                document.getElementById('netROI').value = formatter.format(netROI) + '%';
+            }
+
+
+        };
+   
+
+
+        window.onload = function() {
+            document.getElementById("download").addEventListener("click", () => {
+                const print = this.document.getElementById("calculator");
+                console.log(calculator);
+                console.log(window);
+                var opt = {
+                    margin: .5,
+                    filename: "rio calculator.pdf",
+                    image: {
+                        type: 'png',
+                        quality: .9
+                    },
+                    html2canvas: {
+                        scale: 3
+                    },
+                    jsPDF: {
+                        unit: "in",
+                        format: 'A4'
+                    }
+                };
+                html2pdf().from(calculator).set(opt).save();
+            })
+        };
+    </script>
+
+</body>
+</html>
